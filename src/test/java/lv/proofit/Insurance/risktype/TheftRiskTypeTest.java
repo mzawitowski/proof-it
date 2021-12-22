@@ -1,6 +1,7 @@
 package lv.proofit.Insurance.risktype;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.math.BigDecimal;
 
@@ -10,27 +11,19 @@ public class TheftRiskTypeTest {
 
     private RiskType sut = TheftRiskType.INSTANCE;
 
-    @Test
-    public void calculatePremium_whenSumInsuredIsBelowOrEqualDefault_shouldUseDefaultCoefficient() {
+    @ParameterizedTest
+    @CsvSource({"14.00,1.54,When sum insured is below 15 should use default coefficient",
+                "15.0,0.75,When sum insured is equal 15 should not use default coefficient",
+                "15.01,0.75,When sum insured is greater than 15 should not use default coefficient",
+                "0.00,0.00,When sum insured is equal 0 than should return 0"})
+    public void calculatePremium_whenSumInsuredProvided_shouldCalculatePremium(BigDecimal sumInsured, BigDecimal expected, String testCaseDesc) {
         //given
-        var sumInsured = new BigDecimal("14.99");
+        // sumInsured
 
         //when
         BigDecimal result = sut.calculatePremium(sumInsured);
 
         //then
-        assertThat(result).isEqualTo(new BigDecimal("1.65"));
-    }
-
-    @Test
-    public void calculatePremium_whenSumInsuredIsGreaterThanDefault_shouldNotUseDefaultCoefficient() {
-        //given
-        var sumInsured = new BigDecimal("15.01");
-
-        //when
-        BigDecimal result = sut.calculatePremium(sumInsured);
-
-        //then
-        assertThat(result).isEqualTo(new BigDecimal("0.75"));
+        assertThat(result).describedAs(testCaseDesc).isEqualTo(expected);
     }
 }

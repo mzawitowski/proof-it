@@ -1,6 +1,7 @@
 package lv.proofit.Insurance.risktype;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.math.BigDecimal;
 
@@ -10,27 +11,19 @@ public class FireRiskTypeTest {
 
     private RiskType sut = FireRiskType.INSTANCE;
 
-    @Test
-    public void calculatePremium_whenSumInsuredIsBelowOrEqualDefault_shouldUseDefaultCoefficient() {
+    @ParameterizedTest
+    @CsvSource({"99.00,1.39,When sum insured is below 100 should use default coefficient",
+                "100.00,1.40,When sum insured is equal 100 should use default coefficient",
+                "100.01,2.40,When sum insured is greater than 100 should not use default coefficient",
+                "0.00,0.00,When sum insured is equal 0 than should return 0"})
+    public void calculatePremium_whenSumInsuredProvided_shouldCalculatePremium(BigDecimal sumInsured, BigDecimal expected, String testCaseDesc) {
         //given
-        var sumInsured = new BigDecimal("99.99");
+        // sumInsured
 
         //when
         BigDecimal result = sut.calculatePremium(sumInsured);
 
         //then
-        assertThat(result).isEqualTo(new BigDecimal("1.40"));
-    }
-
-    @Test
-    public void calculatePremium_whenSumInsuredIsGreaterThanDefault_shouldNotUseDefaultCoefficient() {
-        //given
-        var sumInsured = new BigDecimal("100.01");
-
-        //when
-        BigDecimal result = sut.calculatePremium(sumInsured);
-
-        //then
-        assertThat(result).isEqualTo(new BigDecimal("2.40"));
+        assertThat(result).describedAs(testCaseDesc).isEqualTo(expected);
     }
 }
