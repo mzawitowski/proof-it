@@ -9,15 +9,15 @@ public enum FireRiskType implements RiskType{
 
     INSTANCE;
 
-    private BigDecimal ONE_HUNDRED = new BigDecimal("100");
-    private BigDecimal COEFFICIENT_FIRE_DEFAULT = new BigDecimal("0.014");
-    private BigDecimal COEFFICIENT_FIRE = new BigDecimal("0.024");
+    private static BigDecimal COEFFICIENT_THRESHOLD_ONE_HUNDRED = new BigDecimal("100");
+    private static BigDecimal COEFFICIENT_FIRE_DEFAULT = new BigDecimal("0.014");
+    private static BigDecimal COEFFICIENT_FIRE = new BigDecimal("0.024");
 
     @Override
     public BigDecimal calculatePremium(BigDecimal insuredSum) {
         BigDecimal result;
 
-        if(ONE_HUNDRED.compareTo(insuredSum) < 0) {
+        if(COEFFICIENT_THRESHOLD_ONE_HUNDRED.compareTo(insuredSum) < 0) {
             result = insuredSum.multiply(COEFFICIENT_FIRE);
         } else {
             result = insuredSum.multiply(COEFFICIENT_FIRE_DEFAULT);

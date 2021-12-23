@@ -9,7 +9,7 @@ public enum TheftRiskType implements RiskType{
 
     INSTANCE;
 
-    private BigDecimal FIFTEEN = new BigDecimal("15");
+    private BigDecimal COEFFICIENT_THRESHOLD_FIFTEEN = new BigDecimal("15");
     private BigDecimal COEFFICIENT_FIRE_DEFAULT = new BigDecimal("0.11");
     private BigDecimal COEFFICIENT_FIRE = new BigDecimal("0.05");
 
@@ -17,7 +17,7 @@ public enum TheftRiskType implements RiskType{
     public BigDecimal calculatePremium(BigDecimal insuredSum) {
         BigDecimal result;
 
-        if(FIFTEEN.compareTo(insuredSum) <= 0) {
+        if(COEFFICIENT_THRESHOLD_FIFTEEN.compareTo(insuredSum) <= 0) {
             result = insuredSum.multiply(COEFFICIENT_FIRE);
         } else {
             result = insuredSum.multiply(COEFFICIENT_FIRE_DEFAULT);

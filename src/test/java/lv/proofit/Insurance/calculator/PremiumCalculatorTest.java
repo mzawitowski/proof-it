@@ -82,6 +82,20 @@ public class PremiumCalculatorTest {
     }
 
     @Test
+    public void calculate_whenPolicyDoesntHaveSubObjects_shouldReturnZero() {
+
+        // given
+        var policy = buildPolicyForSubObjects(List.of());
+
+        // when
+        BigDecimal result = sut.calculate(policy);
+
+        // then
+        assertThat(result).isEqualTo(BigDecimal.ZERO);
+
+    }
+
+    @Test
     public void calculate_whenPolicyIsProvided_shouldBeValidated() {
 
         // given
@@ -92,7 +106,6 @@ public class PremiumCalculatorTest {
 
         // then
         verify(validator).validate(eq(policy));
-
     }
 
     protected Policy buildPolicyForSubObjects(List<Pair<RiskType, BigDecimal>> subObjectMap) {
